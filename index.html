@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ndiso Designs (PTY) Ltd — Instant Quote Calculator</title>
+<style>
+  :root {
+    --primary: #0b0b0b;
+    --accent: #d32f2f;
+    --accent-dark: #a61c1c;
+    --accent-light: #fef2f2;
+    --whatsapp: #25D366;
+    --whatsapp-dark: #1ebe5d;
+    --border: #e5e7eb;
+    --bg: #f4f4f5;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #52525b;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    padding-bottom: 40px;
+  }
+
+  /* Hero Header */
+  .hero {
+    background: var(--primary);
+    color: #ffffff;
+    border-bottom: 5px solid var(--accent);
+    padding: 22px 18px;
+  }
+
+  .hero-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-wrap {
+    width: 66px;
+    flex-shrink: 0;
+    background: #ffffff;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid #27272a;
+  }
+
+  .logo-wrap svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .hero-text h1 {
+    font-size: 21px;
+    font-weight: 900;
+    letter-spacing: 0.4px;
+    line-height: 1.15;
+  }
+
+  .hero-tagline {
+    color: #fca5a5;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+    margin-top: 3px;
+  }
+
+  .hero-loc {
+    font-size: 12px;
+    color: #d4d4d8;
+    margin-top: 3px;
+  }
+
+  /* Main Container */
+  .container {
+    max-width: 960px;
+    margin: 20px auto 0 auto;
+    padding: 0 14px;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  @media (max-width: 820px) {
+    .container {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 20px;
+  }
+
+  .section-title {
+    font-size: 14px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 6px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .section-title span {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  /* Special Bundles & Quick Picks */
+  .quick-deals {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .deal-btn {
+    background: #fafafa;
+    border: 1px solid #d4d4d8;
+    border-radius: 8px;
+    padding: 9px 10px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .deal-btn:hover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .deal-btn.featured {
+    background: var(--accent-light);
+    border: 1.5px solid var(--accent);
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .deal-name {
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--primary);
+    display: block;
+  }
+
+  .deal-sub {
+    font-size: 11px;
+    color: var(--muted);
+    display: block;
+  }
+
+  .deal-price {
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--accent);
+  }
+
+  /* Form Controls */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  @media (max-width: 480px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .field.full {
+    grid-column: 1 / -1;
+  }
+
+  .field label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 4px;
+  }
+
+  .field select, .field input, .field textarea {
+    padding: 9px 11px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    font-size: 13.5px;
+    background: #ffffff;
+    color: var(--text);
+  }
+
+  .field select:focus, .field input:focus, .field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.12);
+  }
+
+  .field select:disabled, .field input:disabled {
+    background: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+  }
+
+  /* Live Estimate Box */
+  .live-box {
+    margin-top: 16px;
+    background: #18181b;
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 14px 16px;
+    border-left: 5px solid var(--accent);
+  }
+
+  .live-tier-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+  }
+
+  .live-summary {
+    font-size: 13px;
+    color: #e4e4e7;
+    margin-bottom: 10px;
+  }
+
+  .live-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-top: 1px solid #3f3f46;
+    padding-top: 10px;
+  }
+
+  .price-stack {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .unit-lbl {
+    font-size: 11.5px;
+    color: #a1a1aa;
+  }
+
+  .sub-lbl {
+    font-size: 18px;
+    font-weight: 900;
+    color: #ffffff;
+  }
+
+  .btn-add {
+    background: var(--accent);
+    color: #ffffff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 7px;
+    font-size: 13.5px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .btn-add:hover {
+    background: var(--accent-dark);
+  }
+
+  /* Quote Cart / List */
+  .cart-empty {
+    text-align: center;
+    padding: 24px 12px;
+    color: var(--muted);
+    font-size: 13px;
+    background: #fafafa;
+    border: 1px dashed #d4d4d8;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cart-item-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .cart-item-meta {
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+
+  .cart-item-right {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .cart-item-total {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--primary);
+    display: block;
+  }
+
+  .btn-del {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 2px;
+  }
+
+  .cart-total-bar {
+    background: var(--primary);
+    color: #ffffff;
+    padding: 12px 14px;
+    border-radius: 7px;
+    border-bottom: 3px solid var(--accent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 14px 0 18px 0;
+  }
+
+  .cart-total-bar span:first-child {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .cart-total-bar span:last-child {
+    font-size: 19px;
+    font-weight: 900;
+  }
+
+  /* WhatsApp CTA */
+  .btn-whatsapp {
+    width: 100%;
+    background: var(--whatsapp);
+    color: #052e16;
+    border: none;
+    padding: 13px 16px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 3px 10px rgba(37, 211, 102, 0.28);
+    transition: background 0.15s;
+    margin-top: 14px;
+  }
+
+  .btn-whatsapp:hover {
+    background: var(--whatsapp-dark);
+  }
+
+  .disclaimer {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 10px;
+    text-align: center;
+    line-height: 1.4;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="logo-wrap">
+        
+<img src="NDISO DESIGNS LOGO 2023-01.png" alt="Ndiso Designs Logo" style="width: 100%; height: auto; display: block;">
+
+      </div>
+      <div class="hero-text">
+        <h1>NDISO DESIGNS (PTY) LTD</h1>
+        <div class="hero-tagline">Instant Custom Apparel & Branding Estimator</div>
+        <div class="hero-loc">Verulam, KZN • Nationwide Courier • WhatsApp: 078 132 5759</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Left Column: Product & Apparel Builder -->
+    <section class="card">
+      <div class="section-title">
+        1. Popular Packages & Quick Add
+        <span>Tap to add straight to quote</span>
+      </div>
+
+      <div class="quick-deals">
+        <button type="button" class="deal-btn featured" onclick="addQuickProduct('Brand Starter Pack: 10x Printed T-Shirts + 10x Printed Caps (Save R150)', 1, 1500)">
+          <div>
+            <span class="deal-name">★ Brand Starter Pack (Save R150)</span>
+            <span class="deal-sub">10 Custom Printed T-Shirts + 10 Custom Printed Caps</span>
+          </div>
+          <span class="deal-price">R 1,500</span>
+        </button>
+
+        <button type="button" class="deal-btn" onclick="addQuickProduct('Sublimation Ceramic Mug (Standard)', 1, 80)">
+          <span class="deal-name">Standard Mug</span>
+          <span class="deal-sub">Full-colour print</span>
+          <span class="deal-price">R 80 / ea</span>
+        </button>
+
+        <button type="button" class="deal-btn" onclick="addQuickProduct('Sublimation Magic Mug (Colour-Changing)', 1, 150)">
+          <span class="deal-name">Magic Mug</span>
+          <span class="deal-sub">Heat-reveal print</span>
+          <span class="deal-price">R 150 / ea</span>
+        </button>
+
+        <button type="button" class="deal-btn" onclick="addQuickProduct('Handcrafted Leather Sandals', 1, 150)">
+          <span class="deal-name">Leather Sandals</span>
+          <span class="deal-sub">Handcrafted pair</span>
+          <span class="deal-price">R 150 / pair</span>
+        </button>
+      </div>
+
+      <div class="section-title">
+        2. Custom Apparel Builder
+        <span>Bulk discounts apply automatically</span>
+      </div>
+
+      <div class="form-grid">
+        <div class="field full">
+          <label for="garmentSelect">Select Garment / Headwear</label>
+          <select id="garmentSelect" onchange="updateEstimate()">
+            <option value="0">Standard Tee</option>
+            <option value="1">Oversized Tee (220 GSM)</option>
+            <option value="2">Oversized Tee (300 GSM)</option>
+            <option value="3">Long Sleeve Tee</option>
+            <option value="4">Golfer</option>
+            <option value="5">Long Sleeve Golfer / Dryfit</option>
+            <option value="6">Sweater</option>
+            <option value="7">Hoodie</option>
+            <option value="8">Sleeveless Hoodie</option>
+            <option value="9">Shorts</option>
+            <option value="10">Long Pants</option>
+            <option value="11">Puff Jacket</option>
+            <option value="12">Trucker Cap / Bucket Hat</option>
+            <option value="13">Beanie / Standard Hat</option>
+            <option value="14">Premium Fashion Hat</option>
+            <option value="15">Side Bag</option>
+            <option value="16">Kiddies Tee</option>
+            <option value="17">Kiddies Golfer</option>
+            <option value="18">Kiddies School Hat</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="qtyInput">Quantity</label>
+          <input type="number" id="qtyInput" value="3" min="1" step="1" oninput="updateEstimate()">
+        </div>
+
+        <div class="field">
+          <label for="orderTypeSelect">Branding Option</label>
+          <select id="orderTypeSelect" onchange="updateEstimate()">
+            <option value="printed">Printed With Ndiso Designs</option>
+            <option value="blank">Plain / Blank Garments Only</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="sizeSelect">Print Size</label>
+          <select id="sizeSelect" onchange="updateEstimate()">
+            <option value="A6">A6 Logo (Pocket / Cap)</option>
+            <option value="A5">A5 Print (Medium Chest)</option>
+            <option value="A4">A4 Print (Full Front or Back)</option>
+            <option value="A4+A6" selected>A4 + A6 Combo (Front Logo + Back)</option>
+            <option value="A3">A3 Print (Oversized)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="vinylSelect">Print Finish</label>
+          <select id="vinylSelect" onchange="updateEstimate()">
+            <option value="flex">Standard Smooth Flex</option>
+            <option value="flock">Velvet Flock / Glitter / Metallic</option>
+            <option value="puff">3D Raised Puff Print</option>
+          </select>
+        </div>
+
+        <div class="field full">
+          <label for="layersInput">Number of Print Colours (1 to 4 Colours)</label>
+          <input type="number" id="layersInput" value="1" min="1" max="4" step="1" oninput="updateEstimate()">
+        </div>
+      </div>
+
+      <!-- Live Price Readout -->
+      <div class="live-box">
+        <span class="live-tier-badge" id="tierBadge">Volume Tier: 3–4 units</span>
+        <div class="live-summary" id="liveSummary">3x Standard Tee + A4 + A6 Combo (Standard Smooth Flex, 1 Colour)</div>
+        <div class="live-bottom">
+          <div class="price-stack">
+            <span class="unit-lbl" id="unitPriceText">Estimated Unit Price: R 167.00</span>
+            <span class="sub-lbl" id="lineSubtotalText">R 501.00</span>
+          </div>
+          <button type="button" class="btn-add" onclick="addBuilderToCart()">+ Add to My Quote</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Quote Cart & WhatsApp Submission -->
+    <section class="card">
+      <div class="section-title">
+        3. Your Quote List
+        <span id="cartCount">0 items</span>
+      </div>
+
+      <div id="cartContainer">
+        <div class="cart-empty">
+          Your quote list is empty.<br>Select a package or configure your apparel on the left and tap <strong>+ Add to My Quote</strong>.
+        </div>
+      </div>
+
+      <div class="cart-total-bar">
+        <span>Estimated Total</span>
+        <span id="grandTotalText">R 0.00</span>
+      </div>
+
+      <div class="section-title">
+        4. Send Request via WhatsApp
+      </div>
+
+      <div class="form-grid">
+        <div class="field full">
+          <label for="custName">Your Name / Brand Name *</label>
+          <input type="text" id="custName" placeholder="e.g., Thabo / Kasi Streetwear">
+        </div>
+
+        <div class="field">
+          <label for="deliveryMethod">Collection / Delivery</label>
+          <select id="deliveryMethod">
+            <option value="Collection in Verulam, KZN">Collection in Verulam, KZN</option>
+            <option value="Paxi Courier (PEP Store)">Paxi Courier (PEP Store)</option>
+            <option value="The Courier Guy (Door-to-Door)">The Courier Guy (Door-to-Door)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="neededBy">Target Date (Optional)</label>
+          <input type="date" id="neededBy">
+        </div>
+
+        <div class="field full">
+          <label for="custNotes">Garment Colours, Sizes & Logo Notes</label>
+          <textarea id="custNotes" rows="3" placeholder="e.g., 5x Black (2M, 2L, 1XL), 5x White. Logo ready in PDF/AI format..."></textarea>
+        </div>
+      </div>
+
+      <button type="button" class="btn-whatsapp" onclick="sendToWhatsApp()">
+        <span>Send Quote Request on WhatsApp</span>
+      </button>
+
+      <div class="disclaimer">
+        A 50% deposit confirms production once artwork and stock are verified.<br>
+        Final formal invoice will be issued by Ndiso Designs (PTY) Ltd.
+      </div>
+    </section>
+  </main>
+
+<script>
+  const WHATSAPP_NUMBER = "27781325759"; // 078 132 5759
+
+  const tierBrackets = [
+    { label: "3–4 units", min: 1, max: 4 },
+    { label: "5–9 units", min: 5, max: 9 },
+    { label: "10–14 units", min: 10, max: 14 },
+    { label: "15–19 units", min: 15, max: 19 },
+    { label: "20–24 units", min: 20, max: 24 },
+    { label: "25–49 units", min: 25, max: 49 },
+    { label: "50–100 units", min: 50, max: 100 },
+    { label: "101+ units", min: 101, max: 999999 }
+  ];
+
+  const garmentCatalog = [
+    { name: "Standard Tee", printed: [125, 110, 98, 93, 91, 89, 87, 86], blank: [150, 129, 113, 105, 101, 98, 92, 89] },
+    { name: "Oversized Tee (220 GSM)", printed: [175, 159, 147, 142, 139, 137, 135, 134], blank: [210, 187, 169, 161, 155, 150, 144, 139] },
+    { name: "Oversized Tee (300 GSM)", printed: [225, 209, 196, 191, 187, 185, 183, 182], blank: [270, 246, 226, 216, 209, 203, 195, 189] },
+    { name: "Long Sleeve Tee", printed: [150, 134, 122, 118, 115, 113, 111, 110], blank: [180, 158, 141, 133, 128, 124, 118, 114] },
+    { name: "Golfer", printed: [157, 141, 128, 124, 121, 119, 117, 116], blank: [187.5, 165, 148, 140, 135, 131, 124, 120] },
+    { name: "Long Sleeve Golfer / Dryfit", printed: [175, 159, 147, 142, 139, 137, 135, 134], blank: [210, 187, 169, 161, 155, 150, 144, 139] },
+    { name: "Sweater", printed: [263, 246, 233, 227, 224, 221, 219, 218], blank: [315, 290, 269, 257, 250, 243, 233, 227] },
+    { name: "Hoodie", printed: [269, 252, 239, 234, 230, 227, 225, 224], blank: [322.5, 297, 276, 264, 256, 249, 240, 233] },
+    { name: "Sleeveless Hoodie", printed: [250, 234, 221, 215, 212, 209, 207, 206], blank: [300, 275, 255, 243, 236, 230, 220, 214] },
+    { name: "Shorts", printed: [175, 159, 147, 142, 139, 137, 135, 134], blank: [210, 187, 169, 161, 155, 150, 144, 139] },
+    { name: "Long Pants", printed: [269, 252, 239, 234, 230, 227, 225, 224], blank: [322.5, 297, 276, 264, 256, 249, 240, 233] },
+    { name: "Puff Jacket", printed: [488, 469, 454, 447, 442, 437, 435, 434], blank: [585, 552, 524, 506, 493, 480, 464, 452] },
+    { name: "Trucker Cap / Bucket Hat", printed: [88, 72, 61, 57, 54, 53, 51, 50], blank: [105, 85, 70, 64, 61, 58, 54, 52] },
+    { name: "Beanie / Standard Hat", printed: [100, 85, 73, 69, 66, 65, 63, 62], blank: [120, 100, 84, 78, 74, 71, 67, 64] },
+    { name: "Premium Fashion Hat", printed: [113, 97, 85, 81, 79, 77, 75, 74], blank: [135, 114, 98, 92, 88, 84, 80, 77] },
+    { name: "Side Bag", printed: [163, 147, 135, 130, 127, 125, 123, 122], blank: [195, 173, 155, 147, 142, 137, 131, 127] },
+    { name: "Kiddies Tee", printed: [119, 103, 92, 87, 85, 83, 81, 80], blank: [142.5, 122, 106, 98, 94, 91, 86, 83] },
+    { name: "Kiddies Golfer", printed: [144, 128, 116, 112, 109, 107, 105, 104], blank: [172.5, 151, 134, 126, 121, 117, 112, 108] },
+    { name: "Kiddies School Hat", printed: [94, 79, 67, 63, 60, 59, 57, 56], blank: [112.5, 92, 77, 71, 67, 65, 60, 58] }
+  ];
+
+  const htvMatrix = {
+    flex: {
+      label: "Standard Smooth Flex",
+      A6: [8.5, 8.5, 8.0, 8.0, 8.0, 7.5, 7.5, 7.0],
+      A5: [17.0, 16.5, 16.0, 15.5, 15.5, 15.0, 14.5, 14.0],
+      A4: [34.0, 33.0, 32.0, 31.0, 30.5, 30.0, 29.0, 28.0],
+      "A4+A6": [42.0, 41.0, 40.0, 39.0, 38.0, 37.0, 36.0, 35.0],
+      A3: [67.5, 65.5, 64.0, 62.0, 60.5, 59.5, 57.5, 56.0]
+    },
+    flock: {
+      label: "Velvet Flock / Glitter / Metallic",
+      A6: [15.0, 15.0, 14.5, 14.0, 13.5, 13.5, 13.0, 12.5],
+      A5: [30.0, 29.5, 28.5, 28.0, 27.0, 26.5, 26.0, 25.0],
+      A4: [60.0, 58.5, 57.0, 55.5, 54.0, 53.0, 51.5, 50.0],
+      "A4+A6": [75.0, 73.0, 71.0, 69.0, 67.5, 66.0, 64.0, 62.5],
+      A3: [120.0, 117.0, 114.0, 110.5, 108.0, 106.0, 102.5, 100.0]
+    },
+    puff: {
+      label: "3D Raised Puff Print",
+      A6: [18.0, 18.0, 17.5, 17.0, 16.5, 16.0, 15.5, 15.0],
+      A5: [36.0, 35.5, 34.5, 33.5, 32.5, 32.0, 31.0, 30.0],
+      A4: [72.0, 70.5, 68.5, 66.5, 65.0, 63.5, 61.5, 60.0],
+      "A4+A6": [90.0, 88.0, 85.5, 83.0, 81.0, 79.5, 77.0, 75.0],
+      A3: [144.0, 140.5, 136.5, 132.5, 130.0, 127.0, 123.0, 120.0]
+    }
+  };
+
+  let quoteCart = [];
+
+  function formatZAR(amount) {
+    return 'R ' + Number(amount || 0).toLocaleString('en-ZA', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  function getTierIndex(qty) {
+    for (let i = 0; i < tierBrackets.length; i++) {
+      if (qty >= tierBrackets[i].min && qty <= tierBrackets[i].max) return i;
+    }
+    return 0;
+  }
+
+  function calculateBuilderItem() {
+    const gIdx = parseInt(document.getElementById('garmentSelect').value) || 0;
+    const garment = garmentCatalog[gIdx];
+    const qty = Math.max(1, parseInt(document.getElementById('qtyInput').value) || 1);
+    const orderType = document.getElementById('orderTypeSelect').value;
+    const size = document.getElementById('sizeSelect').value;
+    const vinyl = document.getElementById('vinylSelect').value;
+    const layers = Math.min(4, Math.max(1, parseInt(document.getElementById('layersInput').value) || 1));
+
+    const tIdx = getTierIndex(qty);
+    const tierLabel = tierBrackets[tIdx].label;
+
+    let unitPrice = 0;
+    let title = '';
+    let details = '';
+
+    if (orderType === 'blank') {
+      unitPrice = garment.blank[tIdx];
+      title = `${garment.name} (Blank / Unprinted)`;
+      details = `Tier: ${tierLabel} • ${formatZAR(unitPrice)} each`;
+    } else {
+      const basePrice = garment.printed[tIdx];
+      const printPrice = htvMatrix[vinyl][size][tIdx] * layers;
+      unitPrice = basePrice + printPrice;
+      title = `${garment.name} + ${size} ${htvMatrix[vinyl].label} (${layers} ${layers === 1 ? 'Colour' : 'Colours'})`;
+      details = `Tier: ${tierLabel} • ${formatZAR(unitPrice)} each`;
+    }
+
+    return { title, details, qty, unitPrice, tierLabel };
+  }
+
+  function updateEstimate() {
+    const isBlank = document.getElementById('orderTypeSelect').value === 'blank';
+    document.getElementById('sizeSelect').disabled = isBlank;
+    document.getElementById('vinylSelect').disabled = isBlank;
+    document.getElementById('layersInput').disabled = isBlank;
+
+    const item = calculateBuilderItem();
+    document.getElementById('tierBadge').textContent = `Volume Tier: ${item.tierLabel}`;
+    document.getElementById('liveSummary').textContent = `${item.qty}x ${item.title}`;
+    document.getElementById('unitPriceText').textContent = `Unit Price: ${formatZAR(item.unitPrice)}`;
+    document.getElementById('lineSubtotalText').textContent = formatZAR(item.qty * item.unitPrice);
+  }
+
+  function addBuilderToCart() {
+    const item = calculateBuilderItem();
+    quoteCart.push({
+      title: item.title,
+      details: item.details,
+      qty: item.qty,
+      unitPrice: item.unitPrice
+    });
+    renderCart();
+  }
+
+  function addQuickProduct(title, qty, unitPrice) {
+    const existing = quoteCart.find(i => i.title === title);
+    if (existing) {
+      existing.qty += qty;
+    } else {
+      quoteCart.push({
+        title: title,
+        details: `${formatZAR(unitPrice)} each`,
+        qty: qty,
+        unitPrice: unitPrice
+      });
+    }
+    renderCart();
+  }
+
+  function removeCartItem(index) {
+    quoteCart.splice(index, 1);
+    renderCart();
+  }
+
+  function renderCart() {
+    const container = document.getElementById('cartContainer');
+    const countEl = document.getElementById('cartCount');
+    const grandEl = document.getElementById('grandTotalText');
+
+    countEl.textContent = `${quoteCart.length} ${quoteCart.length === 1 ? 'item' : 'items'}`;
+
+    if (quoteCart.length === 0) {
+      container.innerHTML = `<div class="cart-empty">Your quote list is empty.<br>Select a package or configure your apparel on the left and tap <strong>+ Add to My Quote</strong>.</div>`;
+      grandEl.textContent = 'R 0.00';
+      return;
+    }
+
+    let html = '';
+    let grandTotal = 0;
+
+    quoteCart.forEach((item, idx) => {
+      const lineTotal = item.qty * item.unitPrice;
+      grandTotal += lineTotal;
+      html += `
+        <div class="cart-item">
+          <div>
+            <div class="cart-item-title">${item.qty}x ${item.title}</div>
+            <div class="cart-item-meta">${item.details}</div>
+          </div>
+          <div class="cart-item-right">
+            <span class="cart-item-total">${formatZAR(lineTotal)}</span>
+            <button type="button" class="btn-del" onclick="removeCartItem(${idx})">Remove</button>
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+    grandEl.textContent = formatZAR(grandTotal);
+  }
+
+  function sendToWhatsApp() {
+    if (quoteCart.length === 0) {
+      alert("Please add at least one item to your quote list before sending.");
+      return;
+    }
+
+    const custName = document.getElementById('custName').value.trim();
+    if (!custName) {
+      alert("Please enter your Name or Brand Name so we know who the quote is for.");
+      document.getElementById('custName').focus();
+      return;
+    }
+
+    const delivery = document.getElementById('deliveryMethod').value;
+    const neededBy = document.getElementById('neededBy').value;
+    const notes = document.getElementById('custNotes').value.trim();
+
+    let grandTotal = 0;
+    let lines = [];
+    lines.push(`*NEW QUOTE REQUEST — NDISO DESIGNS*`);
+    lines.push(`*Client:* ${custName}`);
+    lines.push(`*Delivery/Collection:* ${delivery}`);
+    if (neededBy) lines.push(`*Target Date:* ${neededBy}`);
+    lines.push(`------------------------------`);
+
+    quoteCart.forEach((item, index) => {
+      const lineTotal = item.qty * item.unitPrice;
+      grandTotal += lineTotal;
+      lines.push(`${index + 1}. *${item.qty}x ${item.title}*`);
+      lines.push(`   @ ${formatZAR(item.unitPrice)} ea = *${formatZAR(lineTotal)}*`);
+    });
+
+    lines.push(`------------------------------`);
+    lines.push(`*ESTIMATED TOTAL: ${formatZAR(grandTotal)}*`);
+    if (notes) {
+      lines.push(`\n*Notes / Sizes / Colours:*\n${notes}`);
+    }
+    lines.push(`\n_Sent from Ndiso Designs Instant Quote Calculator_`);
+
+    const message = encodeURIComponent(lines.join('\n'));
+    const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+    window.open(waUrl, '_blank');
+  }
+
+  window.onload = function() {
+    updateEstimate();
+  };
+</script>
+</body>
+</html>
