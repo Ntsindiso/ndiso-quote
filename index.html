@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ndiso Designs (PTY) Ltd — Instant Quote Estimator</title>
+  <style>
+    :root {
+      --bg: #f4f4f6;
+      --card: #ffffff;
+      --ink: #18181b;
+      --muted: #52525b;
+      --line: #e4e4e7;
+      --accent: #b91c1c;
+      --accent-dark: #991b1b;
+      --accent-soft: #fef2f2;
+      --green: #16a34a;
+      --green-dark: #15803d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+
+    header {
+      background: #111113;
+      color: #ffffff;
+      border-bottom: 4px solid var(--accent);
+      padding: 16px 20px;
+    }
+
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-left img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 4px;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-sub {
+      margin: 2px 0 0;
+      font-size: 0.85rem;
+      color: #fca5a5;
+      font-weight: 600;
+    }
+
+    .brand-meta {
+      margin: 2px 0 0;
+      font-size: 0.8rem;
+      color: #d4d4d8;
+    }
+
+    .mode-switch {
+      display: inline-flex;
+      background: #27272a;
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid #3f3f46;
+      gap: 4px;
+    }
+
+    .mode-btn {
+      border: none;
+      background: transparent;
+      color: #e4e4e7;
+      padding: 8px 14px;
+      border-radius: 7px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .mode-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .mode-banner {
+      max-width: 1120px;
+      margin: 14px auto 0;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      background: var(--accent-soft);
+      border: 1px solid #fecaca;
+      color: #7f1d1d;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 16px auto 40px;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 1.35fr 0.95fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .card-head h2 {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .card-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .starter-banner {
+      border: 2px solid var(--accent);
+      background: #fffafa;
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      margin-bottom: 12px;
+      transition: background 0.15s ease;
+    }
+
+    .starter-banner:hover { background: var(--accent-soft); }
+    .starter-title { font-weight: 800; color: var(--accent); font-size: 0.95rem; }
+    .starter-desc { font-size: 0.82rem; color: var(--muted); }
+    .starter-price { font-weight: 800; font-size: 1.05rem; color: var(--ink); white-space: nowrap; }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .quick-grid { grid-template-columns: 1fr; }
+    }
+
+    .quick-item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      background: #fafafa;
+      transition: border-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .quick-item:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .quick-name { font-weight: 700; font-size: 0.88rem; }
+    .quick-sub { font-size: 0.76rem; color: var(--muted); margin: 2px 0 6px; }
+    .quick-price { font-weight: 800; font-size: 0.9rem; color: var(--accent); }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+    }
+
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    select, input[type="number"], input[type="text"], input[type="date"], textarea {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid #d4d4d8;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: #ffffff;
+      color: var(--ink);
+    }
+
+    select:focus, input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .size-box {
+      margin-top: 14px;
+      padding: 12px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 10px;
+      background: #f8fafc;
+    }
+
+    .size-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .size-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    @media (max-width: 520px) {
+      .size-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .size-chip {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 6px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .size-label { font-size: 0.78rem; font-weight: 800; }
+
+    .size-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .qty-btn {
+      width: 22px;
+      height: 22px;
+      border: 1px solid #d4d4d8;
+      border-radius: 5px;
+      background: #f4f4f5;
+      font-weight: 800;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .qty-btn:hover { background: #e4e4e7; }
+
+    .size-val {
+      min-width: 18px;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .check-row {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .check-row input { width: auto; }
+
+    .preview-box {
+      margin-top: 14px;
+      background: #18181b;
+      color: #ffffff;
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tier-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-bottom: 4px;
+    }
+
+    .preview-sub { font-size: 0.82rem; color: #d4d4d8; }
+    .preview-unit { font-size: 1.35rem; font-weight: 800; color: #fca5a5; }
+    .preview-line { font-size: 0.82rem; color: #a1a1aa; text-align: right; }
+
+    .btn-add {
+      margin-top: 12px;
+      width: 100%;
+      padding: 11px 16px;
+      border: none;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.92rem;
+      cursor: pointer;
+    }
+
+    .btn-add:hover { background: var(--accent-dark); }
+
+    .quote-list {
+      min-height: 110px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      background: #fafafa;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      padding: 24px 10px;
+    }
+
+    .quote-item {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .quote-item:last-child { margin-bottom: 0; }
+    .qi-title { font-weight: 700; font-size: 0.88rem; }
+    .qi-meta { font-size: 0.77rem; color: var(--muted); margin-top: 2px; }
+    .qi-right { text-align: right; white-space: nowrap; }
+    .qi-price { font-weight: 800; font-size: 0.9rem; }
+
+    .btn-remove {
+      margin-top: 4px;
+      border: none;
+      background: transparent;
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .total-bar {
+      margin-top: 12px;
+      background: #18181b;
+      color: #ffffff;
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .total-label { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.04em; color: #d4d4d8; }
+    .total-sub { font-size: 0.75rem; color: #a1a1aa; }
+    .total-amount { font-size: 1.45rem; font-weight: 800; color: #ffffff; }
+
+    .btn-wa {
+      margin-top: 14px;
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      background: var(--green);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .btn-wa:hover { background: var(--green-dark); }
+    .foot-note { margin-top: 8px; font-size: 0.76rem; color: var(--muted); text-align: center; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand-left">
+        <img src="NDISO DESIGNS LOGO 2023-01.png" alt="Ndiso Designs Logo" />
+        <div>
+          <h1 class="brand-title">NDISO DESIGNS (PTY) LTD</h1>
+          <div class="brand-sub">INSTANT CUSTOM APPAREL &amp; BRANDING ESTIMATOR</div>
+          <div class="brand-meta">Verulam, KZN • Nationwide Courier • WhatsApp: 078 132 5759</div>
+        </div>
+      </div>
+
+      <div class="mode-switch" role="group" aria-label="Pricing mode">
+        <button type="button" id="btnRetailMode" class="mode-btn active" onclick="setMode('retail')">Retail Buyer</button>
+        <button type="button" id="btnResellerMode" class="mode-btn" onclick="setMode('reseller')">Reseller Wholesale</button>
+      </div>
+    </div>
+
+    <div id="modeBanner" class="mode-banner">
+      <span id="modeBannerText"><strong>Retail Mode:</strong> Standard customer pricing with automatic volume discounts.</span>
+      <span><strong>Bizana Taxi Courier:</strong> R100 flat (&lt;10 kg)</span>
+    </div>
+  </header>
+
+  <main>
+    <div>
+      <section class="card">
+        <div class="card-head">
+          <h2>1. Popular Packages &amp; Quick Add</h2>
+          <span class="card-note">Tap to add straight to quote</span>
+        </div>
+
+        <div class="starter-banner" onclick="addStarterPack()">
+          <div>
+            <div id="starterTitle" class="starter-title">★ Brand Starter Pack (Save R150)</div>
+            <div id="starterDesc" class="starter-desc">10 Custom Printed T-Shirts + 10 Custom Printed Caps</div>
+          </div>
+          <div id="starterPrice" class="starter-price">R1,500</div>
+        </div>
+
+        <div class="quick-grid">
+          <div class="quick-item" onclick="addQuickItem('Standard Mug', 80, 65, 'Full-colour wrap print', 1, 6)">
+            <div class="quick-name">Standard Mug</div>
+            <div class="quick-sub">Full-colour wrap print</div>
+            <div id="qPriceMug" class="quick-price">R80 / ea</div>
+          </div>
+          <div class="quick-item" onclick="addQuickItem('Magic Mug', 150, 120, 'Heat-reveal print', 1, 6)">
+            <div class="quick-name">Magic Mug</div>
+            <div class="quick-sub">Heat-reveal print</div>
+            <div id="qPriceMagic" class="quick-price">R150 / ea</div>
+          </div>
+          <div class="quick-item" onclick="addQuickItem('Leather Sandals', 150, 125, 'Handcrafted pair', 1, 3)">
+            <div class="quick-name">Leather Sandals</div>
+            <div class="quick-sub">Handcrafted pair</div>
+            <div id="qPriceSandal" class="quick-price">R150 / pair</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>2. Custom Apparel Builder</h2>
+          <span class="card-note">Bulk discounts &amp; size counts apply</span>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="garmentSelect">Select Garment / Item</label>
+            <select id="garmentSelect" onchange="updatePreview()"></select>
+          </div>
+
+          <div class="field">
+            <label for="qtyInput">Quantity</label>
+            <input type="number" id="qtyInput" min="1" value="3" oninput="syncQtyFromInput()" />
+          </div>
+
+          <div class="field">
+            <label for="brandingSelect">Branding Option</label>
+            <select id="brandingSelect" onchange="updatePreview()">
+              <option value="printed">Printed With Ndiso Designs</option>
+              <option value="plain">Plain / Unprinted Blank Only</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="printSizeSelect">Print Size</label>
+            <select id="printSizeSelect" onchange="updatePreview()">
+              <option value="combo">A4 + A6 Combo (Front Logo + Back)</option>
+              <option value="a4">A4 Single Print (Front or Back)</option>
+              <option value="a6">A6 Small Logo (Chest / Cap / Pocket)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="finishSelect">Print Finish / Vinyl Type</label>
+            <select id="finishSelect" onchange="updatePreview()">
+              <option value="flex">Standard Smooth Flex</option>
+              <option value="specialty">Flock / Glitter / Camo / Rainbow</option>
+              <option value="puff">3D Puff (Raised Foam)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="colorsSelect">Number of Print Colours (1 to 4)</label>
+            <select id="colorsSelect" onchange="updatePreview()">
+              <option value="1">1 Colour Layer</option>
+              <option value="2">2 Colour Layers</option>
+              <option value="3">3 Colour Layers</option>
+              <option value="4">4 Colour Layers</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="size-box">
+          <div class="size-header">
+            <label style="margin:0;">Garment Size Breakdown (XS – 2XL + Mixed)</label>
+            <button type="button" class="qty-btn" style="width:auto; padding:2px 8px; font-size:0.74rem;" onclick="clearSizes()">Reset Sizes</button>
+          </div>
+          <div class="size-grid" id="sizeGrid"></div>
+        </div>
+
+        <label class="check-row">
+          <input type="checkbox" id="outlineCheck" onchange="updatePreview()" />
+          <span>Hollow Outline / Drip Cut (+30% vinyl consumption — e.g., outline/drip lettering)</span>
+        </label>
+
+        <div class="preview-box">
+          <div>
+            <span id="tierBadge" class="tier-badge">Tier: 3–4 units</span>
+            <div id="previewDesc" class="preview-sub">3x Tees • A4 + A6 Combo • Standard Smooth Flex (1 Colour)</div>
+          </div>
+          <div>
+            <div id="previewUnit" class="preview-unit">R122.00 / ea</div>
+            <div id="previewLine" class="preview-line">Line total: R366.00</div>
+          </div>
+        </div>
+
+        <button type="button" class="btn-add" onclick="addConfiguredItem()">+ Add to My Quote</button>
+      </section>
+    </div>
+
+    <div>
+      <section class="card">
+        <div class="card-head">
+          <h2>3. Your Quote List</h2>
+          <span id="quoteCount" class="card-note">0 items</span>
+        </div>
+
+        <div id="quoteList" class="quote-list">
+          <div class="empty-state">Your quote list is empty.<br />Select a package or configure your apparel and tap <strong>+ Add to My Quote</strong>.</div>
+        </div>
+
+        <div class="total-bar">
+          <div>
+            <div class="total-label">ESTIMATED TOTAL</div>
+            <div id="totalSub" class="total-sub">Excludes courier unless selected below</div>
+          </div>
+          <div id="estimatedTotal" class="total-amount">R0.00</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>4. Send Request via WhatsApp</h2>
+        </div>
+
+        <div class="form-grid">
+          <div class="field full">
+            <label for="clientName">Your Name / Brand Name *</label>
+            <input type="text" id="clientName" placeholder="e.g., Thabo / Kasi Streetwear" />
+          </div>
+
+          <div class="field">
+            <label for="deliverySelect">Collection / Delivery</label>
+            <select id="deliverySelect" onchange="renderQuote()">
+              <option value="Collection in Verulam, KZN (Free)">Collection in Verulam, KZN (Free)</option>
+              <option value="Same-Day Taxi: Durban to Bizana (<10kg) - R100">Same-Day Taxi: Durban → Bizana (&lt;10kg) — R100</option>
+              <option value="Nationwide Courier (Courier Guy / PostNet / PAXI)">Nationwide Courier (Courier Guy / PostNet / PAXI)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="targetDate">Target Date (Optional)</label>
+            <input type="date" id="targetDate" />
+          </div>
+
+          <div class="field full">
+            <label for="notesInput">Garment Colours, Sizes &amp; Logo Notes</label>
+            <textarea id="notesInput" rows="3" placeholder="e.g., Black & White mix, vector logo ready in PDF/AI..."></textarea>
+          </div>
+        </div>
+
+        <button type="button" class="btn-wa" onclick="sendWhatsApp()">Send Quote Request on WhatsApp</button>
+        <div class="foot-note">A 50% deposit confirms production once artwork and stock are verified.</div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const SIZES = ["XS", "S", "M", "L", "XL", "2XL", "Mixed"];
+    let sizeCounts = Object.fromEntries(SIZES.map(s => [s, 0]));
+    let currentMode = "retail";
+    let quoteItems = [];
+
+    // Garments aligned with supplier sheet & reseller rules (10% blank markup, 50% HTV markup)
+    const GARMENTS = [
+      { id: "tee", name: "Tees", retailBlank: 85, resellerBlank: 77, retailBase: 145, resellerBase: 127 },
+      { id: "oversized", name: "Oversized Tees", retailBlank: 135, resellerBlank: 121, retailBase: 195, resellerBase: 171 },
+      { id: "long_tee", name: "Long Sleeve Tees", retailBlank: 110, resellerBlank: 99, retailBase: 170, resellerBase: 149 },
+      { id: "golfer", name: "Golfers", retailBlank: 118, resellerBlank: 104.5, retailBase: 178, resellerBase: 154.5 },
+      { id: "long_golfer", name: "Long Sleeve Golfers", retailBlank: 135, resellerBlank: 121, retailBase: 195, resellerBase: 171 },
+      { id: "dryfit", name: "Dryfits", retailBlank: 135, resellerBlank: 121, retailBase: 195, resellerBase: 171 },
+      { id: "kids_tee", name: "Kiddies Tees", retailBlank: 80, resellerBlank: 71.5, retailBase: 135, resellerBase: 121.5 },
+      { id: "kids_golfer", name: "Kiddies Golfers", retailBlank: 105, resellerBlank: 93.5, retailBase: 160, resellerBase: 143.5 },
+      { id: "hoodie", name: "Hoodies", retailBlank: 225, resellerBlank: 203.5, retailBase: 295, resellerBase: 253.5 },
+      { id: "sweater", name: "Sweater", retailBlank: 220, resellerBlank: 198, retailBase: 285, resellerBase: 248 },
+      { id: "long_pants", name: "Long Pants", retailBlank: 225, resellerBlank: 203.5, retailBase: 290, resellerBase: 253.5 },
+      { id: "sleeveless_hoodie", name: "Sleeveless Hoodies", retailBlank: 208, resellerBlank: 187, retailBase: 268, resellerBase: 237 },
+      { id: "shorts", name: "Shorts", retailBlank: 135, resellerBlank: 121, retailBase: 190, resellerBase: 171 },
+      { id: "puff_jacket", name: "Puff Jackets", retailBlank: 440, resellerBlank: 396, retailBase: 510, resellerBase: 446 },
+      { id: "cap", name: "Trucker Caps", retailBlank: 52, resellerBlank: 44, retailBase: 98, resellerBase: 94 },
+      { id: "bucket_hat", name: "Bucket Hats", retailBlank: 52, resellerBlank: 44, retailBase: 98, resellerBase: 94 },
+      { id: "beanie", name: "Beanies", retailBlank: 62, resellerBlank: 55, retailBase: 108, resellerBase: 105 },
+      { id: "gucci_hat", name: "Gucci Hats", retailBlank: 72, resellerBlank: 66, retailBase: 122, resellerBase: 116 },
+      { id: "kids_school_hat", name: "Kiddies School Hats", retailBlank: 56, resellerBlank: 49.5, retailBase: 102, resellerBase: 99.5 },
+      { id: "kids_creche_hat", name: "Kiddies Creche Hats", retailBlank: 50, resellerBlank: 44, retailBase: 96, resellerBase: 94 },
+      { id: "side_bag", name: "Side Bags", retailBlank: 125, resellerBlank: 110, retailBase: 175, resellerBase: 160 }
+    ];
+
+    function getTier(qty) {
+      if (qty <= 2) return { label: "1–2 units", mult: 1.0, comboReseller: 50, comboRetail: 60 };
+      if (qty <= 4) return { label: "3–4 units", mult: 0.94, comboReseller: 45, comboRetail: 56 };
+      if (qty <= 9) return { label: "5–9 units", mult: 0.88, comboReseller: 39, comboRetail: 50 };
+      if (qty <= 14) return { label: "10–14 units", mult: 0.82, comboReseller: 33, comboRetail: 44 };
+      if (qty <= 20) return { label: "15–20 units", mult: 0.76, comboReseller: 28, comboRetail: 38 };
+      if (qty <= 24) return { label: "20–24 units", mult: 0.72, comboReseller: 24, comboRetail: 34 };
+      return { label: "25+ units", mult: 0.67, comboReseller: 20, comboRetail: 29 };
+    }
+
+    function initGarments() {
+      const sel = document.getElementById("garmentSelect");
+      sel.innerHTML = GARMENTS.map(g => `<option value="${g.id}">${g.name}</option>`).join("");
+    }
+
+    function initSizeGrid() {
+      const grid = document.getElementById("sizeGrid");
+      grid.innerHTML = SIZES.map(sz => `
+        <div class="size-chip">
+          <span class="size-label">${sz}</span>
+          <div class="size-controls">
+            <button type="button" class="qty-btn" onclick="changeSize('${sz}', -1)">−</button>
+            <span id="sz-${sz}" class="size-val">0</span>
+            <button type="button" class="qty-btn" onclick="changeSize('${sz}', 1)">+</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function changeSize(sz, delta) {
+      sizeCounts[sz] = Math.max(0, (sizeCounts[sz] || 0) + delta);
+      document.getElementById("sz-" + sz).textContent = sizeCounts[sz];
+      const totalSizes = Object.values(sizeCounts).reduce((a, b) => a + b, 0);
+      if (totalSizes > 0) {
+        document.getElementById("qtyInput").value = totalSizes;
+      }
+      updatePreview();
+    }
+
+    function clearSizes() {
+      sizeCounts = Object.fromEntries(SIZES.map(s => [s, 0]));
+      SIZES.forEach(sz => {
+        document.getElementById("sz-" + sz).textContent = "0";
+      });
+      updatePreview();
+    }
+
+    function syncQtyFromInput() {
+      const val = Math.max(1, parseInt(document.getElementById("qtyInput").value || "1", 10));
+      document.getElementById("qtyInput").value = val;
+      updatePreview();
+    }
+
+    function getSizeSummary() {
+      const parts = SIZES.filter(s => sizeCounts[s] > 0).map(s => `${sizeCounts[s]}x ${s}`);
+      return parts.length ? parts.join(", ") : "";
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById("btnRetailMode").classList.toggle("active", mode === "retail");
+      document.getElementById("btnResellerMode").classList.toggle("active", mode === "reseller");
+
+      const bannerText = document.getElementById("modeBannerText");
+      if (mode === "reseller") {
+        bannerText.innerHTML = "<strong>Reseller Mode Active:</strong> Blank garments at +10% • HTV vinyl &amp; extra colour layers at +50%.";
+        document.getElementById("starterTitle").textContent = "★ Reseller Brand Starter Pack";
+        document.getElementById("starterPrice").textContent = "R1,290";
+        document.getElementById("qPriceMug").textContent = "R65 / ea (min 6)";
+        document.getElementById("qPriceMagic").textContent = "R120 / ea (min 6)";
+        document.getElementById("qPriceSandal").textContent = "R125 / pair (min 3)";
+      } else {
+        bannerText.innerHTML = "<strong>Retail Mode Active:</strong> Standard customer pricing with automatic volume discounts.";
+        document.getElementById("starterTitle").textContent = "★ Brand Starter Pack (Save R150)";
+        document.getElementById("starterPrice").textContent = "R1,500";
+        document.getElementById("qPriceMug").textContent = "R80 / ea";
+        document.getElementById("qPriceMagic").textContent = "R150 / ea";
+        document.getElementById("qPriceSandal").textContent = "R150 / pair";
+      }
+      updatePreview();
+      renderQuote();
+    }
+
+    function calculateUnitPrice() {
+      const g = GARMENTS.find(item => item.id === document.getElementById("garmentSelect").value) || GARMENTS[0];
+      const qty = Math.max(1, parseInt(document.getElementById("qtyInput").value || "1", 10));
+      const branding = document.getElementById("brandingSelect").value;
+      const printSize = document.getElementById("printSizeSelect").value;
+      const finish = document.getElementById("finishSelect").value;
+      const colors = parseInt(document.getElementById("colorsSelect").value, 10);
+      const isOutline = document.getElementById("outlineCheck").checked;
+      const tier = getTier(qty);
+
+      const blankPrice = currentMode === "reseller" ? g.resellerBlank : g.retailBlank;
+      if (branding === "plain") {
+        const plainMult = currentMode === "reseller" ? (1 - (1 - tier.mult) * 0.45) : (1 - (1 - tier.mult) * 0.5);
+        return Number((blankPrice * plainMult).toFixed(2));
+      }
+
+      // Base 1-colour A4+A6 print rate for tier
+      let baseCombo = currentMode === "reseller" ? tier.comboReseller : tier.comboRetail;
+
+      // Size scaling
+      let sizeFactor = 1.0;
+      if (printSize === "a6") sizeFactor = 0.42;
+      else if (printSize === "a4") sizeFactor = 0.75;
+
+      // Vinyl finish multiplier (Flex = 1.0, Flock/Glitter/Camo = 1.20, 3D Puff = 1.30)
+      let finishMult = 1.0;
+      if (finish === "specialty") finishMult = 1.20;
+      else if (finish === "puff") finishMult = 1.30;
+
+      // Multi-colour layer scaling: additional colours cost ~65% of base layer per extra colour
+      const layerFactor = 1 + Math.max(0, colors - 1) * 0.65;
+
+      // Hollow outline / drip cut rule (+30% vinyl area consumption)
+      const outlineFactor = isOutline ? 1.30 : 1.0;
+
+      const printCharge = baseCombo * sizeFactor * finishMult * layerFactor * outlineFactor;
+      return Number((blankPrice + printCharge).toFixed(2));
+    }
+
+    function updatePreview() {
+      const g = GARMENTS.find(item => item.id === document.getElementById("garmentSelect").value) || GARMENTS[0];
+      const qty = Math.max(1, parseInt(document.getElementById("qtyInput").value || "1", 10));
+      const branding = document.getElementById("brandingSelect").value;
+      const printSize = document.getElementById("printSizeSelect").options[document.getElementById("printSizeSelect").selectedIndex].text;
+      const finish = document.getElementById("finishSelect").options[document.getElementById("finishSelect").selectedIndex].text;
+      const colors = document.getElementById("colorsSelect").value;
+      const isOutline = document.getElementById("outlineCheck").checked;
+      const tier = getTier(qty);
+      const unit = calculateUnitPrice();
+      const lineTotal = unit * qty;
+
+      document.getElementById("tierBadge").textContent = `Tier: ${tier.label} • ${currentMode === "reseller" ? "Reseller" : "Retail"}`;
+
+      let desc = branding === "plain"
+        ? `${qty}x ${g.name} (Plain Blank)`
+        : `${qty}x ${g.name} • ${printSize} • ${finish} (${colors} Col${colors > 1 ? "s" : ""}${isOutline ? ", +30% Outline/Drip" : ""})`;
+
+      const sizeSummary = getSizeSummary();
+      if (sizeSummary) desc += ` [${sizeSummary}]`;
+
+      document.getElementById("previewDesc").textContent = desc;
+      document.getElementById("previewUnit").textContent = `R${unit.toFixed(2)} / ea`;
+      document.getElementById("previewLine").textContent = `Line total: R${lineTotal.toFixed(2)}`;
+    }
+
+    function addConfiguredItem() {
+      const g = GARMENTS.find(item => item.id === document.getElementById("garmentSelect").value) || GARMENTS[0];
+      const qty = Math.max(1, parseInt(document.getElementById("qtyInput").value || "1", 10));
+      const branding = document.getElementById("brandingSelect").value;
+      const printSize = document.getElementById("printSizeSelect").options[document.getElementById("printSizeSelect").selectedIndex].text;
+      const finish = document.getElementById("finishSelect").options[document.getElementById("finishSelect").selectedIndex].text;
+      const colors = document.getElementById("colorsSelect").value;
+      const isOutline = document.getElementById("outlineCheck").checked;
+      const unit = calculateUnitPrice();
+      const sizeSummary = getSizeSummary();
+
+      const details = branding === "plain"
+        ? `Plain Blank (${currentMode === "reseller" ? "Reseller +10%" : "Retail"})`
+        : `${printSize} • ${finish} • ${colors} Col${colors > 1 ? "s" : ""}${isOutline ? " • +30% Outline/Drip" : ""}`;
+
+      quoteItems.push({
+        title: `${qty}x ${g.name}`,
+        meta: sizeSummary ? `${details} | Sizes: ${sizeSummary}` : details,
+        qty,
+        total: Number((unit * qty).toFixed(2))
+      });
+
+      renderQuote();
+    }
+
+    function addStarterPack() {
+      const price = currentMode === "reseller" ? 1290 : 1500;
+      quoteItems.push({
+        title: currentMode === "reseller" ? "1x Reseller Brand Starter Pack" : "1x Brand Starter Pack",
+        meta: "10x Custom Printed Tees + 10x Custom Printed Caps",
+        qty: 1,
+        total: price
+      });
+      renderQuote();
+    }
+
+    function addQuickItem(name, retailUnit, resellerUnit, desc, defaultQty, minQty) {
+      const unit = currentMode === "reseller" ? resellerUnit : retailUnit;
+      const qty = currentMode === "reseller" ? Math.max(defaultQty, minQty) : defaultQty;
+      quoteItems.push({
+        title: `${qty}x ${name}`,
+        meta: `${desc} (R${unit.toFixed(2)} / ea)`,
+        qty,
+        total: Number((unit * qty).toFixed(2))
+      });
+      renderQuote();
+    }
+
+    function removeItem(idx) {
+      quoteItems.splice(idx, 1);
+      renderQuote();
+    }
+
+    function getCourierFee() {
+      const del = document.getElementById("deliverySelect").value;
+      return del.includes("R100") ? 100 : 0;
+    }
+
+    function renderQuote() {
+      const listEl = document.getElementById("quoteList");
+      const countEl = document.getElementById("quoteCount");
+      const totalEl = document.getElementById("estimatedTotal");
+      const subEl = document.getElementById("totalSub");
+
+      const totalUnits = quoteItems.reduce((sum, item) => sum + item.qty, 0);
+      countEl.textContent = `${quoteItems.length} line${quoteItems.length === 1 ? "" : "s"} (${totalUnits} unit${totalUnits === 1 ? "" : "s"})`;
+
+      if (!quoteItems.length) {
+        listEl.innerHTML = `<div class="empty-state">Your quote list is empty.<br />Select a package or configure your apparel and tap <strong>+ Add to My Quote</strong>.</div>`;
+        const courierFee = getCourierFee();
+        totalEl.textContent = `R${courierFee.toFixed(2)}`;
+        subEl.textContent = courierFee > 0 ? "Includes R100 Bizana taxi courier (<10 kg)" : "Excludes courier unless selected below";
+        return;
+      }
+
+      listEl.innerHTML = quoteItems.map((item, idx) => `
+        <div class="quote-item">
+          <div>
+            <div class="qi-title">${item.title}</div>
+            <div class="qi-meta">${item.meta}</div>
+          </div>
+          <div class="qi-right">
+            <div class="qi-price">R${item.total.toFixed(2)}</div>
+            <button type="button" class="btn-remove" onclick="removeItem(${idx})">Remove</button>
+          </div>
+        </div>
+      `).join("");
+
+      const itemsSum = quoteItems.reduce((sum, item) => sum + item.total, 0);
+      const courierFee = getCourierFee();
+      const grandTotal = itemsSum + courierFee;
+
+      totalEl.textContent = `R${grandTotal.toFixed(2)}`;
+      subEl.textContent = courierFee > 0
+        ? `Items R${itemsSum.toFixed(2)} + R100.00 Bizana taxi (<10 kg)`
+        : "50% deposit confirms production";
+    }
+
+    function sendWhatsApp() {
+      if (!quoteItems.length) {
+        alert("Please add at least one item to your quote list first.");
+        return;
+      }
+      const name = document.getElementById("clientName").value.trim() || "Client";
+      const delivery = document.getElementById("deliverySelect").value;
+      const targetDate = document.getElementById("targetDate").value;
+      const notes = document.getElementById("notesInput").value.trim();
+
+      const itemsSum = quoteItems.reduce((sum, item) => sum + item.total, 0);
+      const courierFee = getCourierFee();
+      const grandTotal = itemsSum + courierFee;
+
+      const lines = [
+        `Hello Ndiso Designs (PTY) Ltd! Quote Request (${currentMode === "reseller" ? "Reseller Wholesale" : "Retail"}):`,
+        `Name/Brand: ${name}`,
+        targetDate ? `Target Date: ${targetDate}` : null,
+        `Delivery/Collection: ${delivery}`,
+        "",
+        "Items:",
+        ...quoteItems.map(i => `• ${i.title} — R${i.total.toFixed(2)} (${i.meta})`),
+        courierFee > 0 ? `• Same-Day Taxi Courier (<10 kg): R${courierFee.toFixed(2)}` : null,
+        "",
+        `Estimated Total: R${grandTotal.toFixed(2)}`,
+        notes ? `Notes: ${notes}` : null
+      ].filter(Boolean);
+
+      const url = `https://wa.me/27781325759?text=${encodeURIComponent(lines.join("\n"))}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    initGarments();
+    initSizeGrid();
+    updatePreview();
+    renderQuote();
+  </script>
+</body>
+</html>
